@@ -1,0 +1,170 @@
+<div class="spinner" *ngIf="!(pageLoaded | async) || !dataLoaded ">
+  <mat-spinner diameter="35"></mat-spinner>
+</div>
+<div class="container" *ngIf="(pageLoaded | async) && dataLoaded">
+
+  <div *ngIf="!topDetails">
+    <div class="no-data-alert alert alert-danger" role="alert">No results found. Please enter valid Ticker</div>
+  </div>
+
+  <ng-template #modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        <h4>{{ ticker }}</h4>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <p class="current-price">Current Price: {{ topDetails.last | number: '1.2-2' }}</p>
+        <form>
+          <div class="form-group form-row">
+            <label for="buy-input" class="col-form-label buy-label">Quantity</label>
+            <input type="number" name="quantity" ngbAutofocus class="form-control col-sm-12 col-md-5 col-lg-5" id="buy-input" min="0" step="1"
+                   pattern="\d+" oninput="validity.valid || (value='');" [(ngModel)]="quantity">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+      <p class="total">Total: {{ (quantity * topDetails.last) | number: '1.2-2' }}</p>
+      <button type="button" class="btn btn-success" [disabled]="quantity <= 0" (click)="buyStocks(modal)">Buy</button>
+    </div>
+  </ng-template>
+
+  <div class="page-top" *ngIf="topDetails">
+    <ngb-alert class="alert-message" *ngIf="watchlistMessage" type="{{ isFavorite ? 'success' : 'danger' }}"
+               (close)="watchlistMessage = ''">{{ watchlistMessage }}</ngb-alert>
+    <ngb-alert class="alert-message" *ngIf="portfolioMessage" type="success"
+               (close)="portfolioMessage = ''">{{ portfolioMessage }}</ngb-alert>
+
+    <div class="d-flex justify-content-between w-100 top-details-row-1">
+      <p>
+        {{ topDetails.ticker | uppercase }}
+        <img class="star" alt="favorites"
+             src="{{ isFavorite ? './assets/images/fill-star.svg' : './assets/images/star.svg' }}"
+             (click)="updateWatchlist()"/>
+      </p>
+      <p class="right-col"
+         [ngStyle]="{'color': +topDetails.change > 0 ? 'green' : (+topDetails.change < 0 ? 'red' : 'black')}">{{ topDetails.last | number: '1.2-2' }}</p>
+    </div>
+
+    <div class="d-flex justify-content-between w-100 top-details-row-2">
+      <p class="companyName">{{ topDetails.companyName | titlecase }}</p>
+      <p class="right-col"
+         [ngStyle]="{'color': +topDetails.change > 0 ? 'green' : (+topDetails.change < 0 ? 'red' : 'black')}">
+        <img *ngIf="+topDetails.change"
+             src="{{ +topDetails.change > 0 ? './assets/images/caret-up.svg' : './assets/images/caret-down.svg' }}"
+             alt="caret">
+        {{ topDetails.change | number: '1.2-2' }} ({{ topDetails.changePercent }})
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-between w-100">
+      <p>{{ topDetails.exchangeCode }}</p>
+      <p class="right-col">{{ topDetails.timestamp | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+    </div>
+
+    <div class="d-flex justify-content-between w-100">
+      <button class="btn btn-success" (click)="openModal(modal)">Buy</button>
+    </div>
+
+    <div [ngStyle]="{'text-align': 'center', 'padding-top': '15px'}">
+      <span [ngStyle]="{'background-color': marketStatus ? 'green' : 'rgb(248,214,216)' }" *ngIf="marketStatus">Market is Open</span>
+      <span [ngStyle]="{'background-color': marketStatus ? 'green' : 'rgb(248,214,216)' }" *ngIf="!marketStatus">Market closed on {{ topDetails.prevOpenTimestamp | date:'yyyy-MM-dd HH:mm:ss' }}</span>
+    </div>
+
+    <div class="tabs">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Summary">
+          <ng-template matTabContent>
+            <div class="container">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-6">
+                <div class="row justify-content-between summary-top">
+                  <div class="col-sm-5 w-50">
+                    <table class="center">
+                      <tr>
+                        <td>High Price:</td>
+                        <td>{{ summaryData.high | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Low Price:</td>
+                        <td>{{ summaryData.low | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Open Price:</td>
+                        <td>{{ summaryData.open | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Prev Close:</td>
+                        <td>{{ summaryData.close | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Volume:</td>
+                        <td>{{ summaryData.volume | number: '1.0-0' }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-sm-5 w-50">
+                    <table class="center" *ngIf="marketStatus">
+                      <tr>
+                        <td>Mid Price:</td>
+                        <td>{{ summaryData.mid | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Ask Price:</td>
+                        <td>{{ summaryData.askPrice | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Ask Size:</td>
+                        <td>{{ summaryData.askSize | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Bid Price:</td>
+                        <td>{{ summaryData.bidPrice | number: '1.2-2' }}</td>
+                      </tr>
+                      <tr>
+                        <td>Bid Size:</td>
+                        <td>{{ summaryData.bidSize | number: '1.2-2' }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <p class="description">Company's Description</p>
+                    <p>Start Date: {{ summaryData.startDate }}</p>
+                    <p class="pr-4">{{ summaryData.description }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-6">
+                <p class="ticker">{{ ticker }}</p>
+                <highcharts-chart class="highcharts w-100 pr-lg-2 pr-4"
+                                  *ngIf="chartOptions"
+                                  [Highcharts]="highCharts"
+                                  [constructorType]="'stockChart'"
+                                  [options]="chartOptions">
+                </highcharts-chart>
+              </div>
+            </div>
+          </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Top News">
+          <app-news></app-news>
+        </mat-tab>
+        <mat-tab label="Charts">
+          <ng-template matTabContent>
+            <app-charts [data]="historicalChartData" [volume]="historicalChartVolume"></app-charts>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+  </div>
+
+</div>

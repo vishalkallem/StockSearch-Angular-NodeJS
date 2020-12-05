@@ -1,0 +1,61 @@
+<div class="container" *ngIf="pageLoaded | async">
+  <ng-template #modal>
+    <div class="modal-header">
+      <div class="modal-title">
+        <h4 class="title">{{ modalInformation.source }}</h4>
+        <p class="date">{{ modalInformation.publishedAt | date:'longDate' }}</p>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal(modal)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <h4 class="body-title">{{ modalInformation.title }}</h4>
+        <p class="body-content" [innerHTML]="modalInformation.description"></p>
+        <p class="body-link">For more details click <a href="{{ modalInformation.url }}" target="_blank">here</a></p>
+      </div>
+      <div class="modal-content">
+        <h4 class="share">Share</h4>
+        <div class="icons">
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text={{ encodeURIComponent(modalInformation.title) }}&url={{ encodeURIComponent(modalInformation.url) }}" target="_blank">
+          <i style="color:rgb(58,146,255);" class="fa fa-twitter" aria-hidden="true"></i>
+        </a>
+          <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large">
+          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ encodeURIComponent(modalInformation.url) }}&src={{ encodeURIComponent(modalInformation.title) }}" class="fb-xfbml-parse-ignore">
+            <i style="color:rgb(1,30,255);" class="fa fa-facebook-square" aria-hidden="true"></i>
+          </a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-container *ngFor="let d of data">
+    <div class="row">
+      <div class="d-flex align-items-stretch col-sm-12 col-md-12 col-lg-6" *ngIf="d[0]">
+      <div class="card w-100" (click)="openModal(modal, d[0])">
+        <div class="row card-row">
+          <div class="col-sm-4 my-auto">
+            <img class="img-card w-100" src="{{ d[0].image }}" alt="image"/>
+          </div>
+          <div class="col-sm-8 my-auto px-md-0 px-lg-0 card-text">
+            <p>{{ d[0].title }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="d-flex align-items-stretch col-sm-12 col-md-12 col-lg-6" *ngIf="d[1]">
+        <div class="card w-100" (click)="openModal(modal, d[1])">
+          <div class="row card-row">
+            <div class="col-sm-4 my-auto">
+              <img class="img-card w-100" src="{{ d[1].image }}" alt="image"/>
+            </div>
+            <div class="col-sm-8 my-auto px-md-0 px-lg-0 card-text">
+              <p>{{ d[1].title }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

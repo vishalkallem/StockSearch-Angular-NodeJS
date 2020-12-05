@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="page-top">
+    <p class="h1 title">My Portfolio</p>
+    <div class="spinner" *ngIf="!(service.loader | async) else loaded">
+      <mat-spinner diameter="35"></mat-spinner>
+    </div>
+
+    <ng-template #modal>
+      <div class="modal-header">
+        <div class="modal-title">
+          <h4>{{ pm.ticker }}</h4>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal(modal, undefined)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="content">
+          <p class="current-price">Current Price: {{ pm.currentPrice | number: '1.2-2' }}</p>
+          <form>
+            <div class="form-group form-row">
+              <label for="buy-input" class="col-form-label buy-label">Quantity</label>
+              <input type="number" name="quantity" ngbAutofocus class="form-control col-sm-12 {{ btnValue === 'buy' ? 'col-md-5 col-lg-5' : 'col-md-2 col-lg-2' }}" id="buy-input" min="0" step="1"
+                     pattern="\d+" oninput="validity.valid || (value='')" [(ngModel)]="quantity">
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <p class="total">Total: {{ (quantity * pm.currentPrice) | number: '1.2-2' }}</p>
+        <button type="button" class="btn btn-success"
+                [disabled]="btnValue === 'buy' ? quantity <= 0 : (quantity <= 0 || quantity > pm.quantity)"
+                (click)="closeModal(modal, btnValue === 'buy')">
+          {{ btnValue | titlecase }}
+        </button>
+      </div>
+    </ng-template>
+
+    <ng-template #loaded>
+      <div *ngIf="data else noData">
+        <div *ngFor="let d of data">
+          <div class="card">
+            <div class="card-header">
+              <span class="h3" (click)="navigate(d.ticker)">{{ d.ticker }}</span> <span class="h4 company-name">{{ d.companyName }}</span>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="d-flex justify-content-between">
+                    <p>Quantity:</p>
+                    <p>{{ d.quantity | number: '1.2-2' }}</p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p>Avg. Cost / Share:</p>
+                    <p>{{ (d.totalCost / d.quantity) | number: '1.2-2' }}</p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p>Total Cost:</p>
+                    <p>{{ d.totalCost | number: '1.2-2' }}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="d-flex justify-content-between">
+                    <p>Change:</p>
+                    <p [ngStyle]="{'color': (+d.change > 0 ? 'green' : +d.change < 0 ? 'red' : 'black') }">
+                      <img *ngIf="+d.change" src="{{ +d.change > 0 ? './assets/images/caret-up.svg' : './assets/images/caret-down.svg' }}" alt="caret">
+                      {{ d.change | number: '1.2-2' }}
+                    </p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p>Current Price:</p>
+                    <p [ngStyle]="{'color': (+d.change > 0 ? 'green' : +d.change < 0 ? 'red' : 'black') }">{{ d.currentPrice | number: '1.2-2' }}</p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p>Market Value:</p>
+                    <p [ngStyle]="{'color': (+d.change > 0 ? 'green' : +d.change < 0 ? 'red' : 'black') }">{{ (d.currentPrice * d.quantity) | number: '1.2-2' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-right">
+              <button class="btn btn-primary card-btn" (click)="openModal(modal, 'buy', d)">Buy</button>
+              <button class="btn btn-danger card-btn" (click)="openModal(modal, 'sell', d)">Sell</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noData>
+        <div class="no-data-alert alert alert-warning" role="alert">Currently you don't have any stock.</div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>

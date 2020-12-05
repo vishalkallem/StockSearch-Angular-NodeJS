@@ -1,0 +1,12 @@
+footer {
+  width: 100%;
+  margin-top: 50px;
+  height: 40px;
+  background-color: rgb(221,221,221);
+}
+
+.text-muted {
+  text-align: center;
+  margin: 0;
+  padding-top: 10px;
+}

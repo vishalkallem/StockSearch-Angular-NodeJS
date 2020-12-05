@@ -1,0 +1,63 @@
+.page-top {
+  padding-top: 50px;
+}
+
+.no-data-alert {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.spinner {
+  margin-top: 20px;
+  position: fixed;
+  right: 50%;
+}
+
+.card {
+  margin-top: 20px;
+}
+
+.close {
+  outline: none;
+}
+
+.card-body {
+  font-size: 25px;
+}
+
+.company-name {
+  padding-left: 10px;
+  color: rgb(128,128,128);
+}
+
+.card-btn {
+  margin-right: 15px;
+}
+
+.modal-body {
+  padding-bottom: 0 !important;
+}
+
+.content {
+  padding-left: 10px;
+}
+
+.current-price {
+  margin-bottom: 2px !important;
+}
+
+.buy-label {
+  padding-right: 7px;
+}
+
+.card-header {
+  cursor: pointer;
+}
+
+.total {
+  margin-top: 12px;
+}
+
+input[type="number"] {
+  padding-left: 15px;
+}

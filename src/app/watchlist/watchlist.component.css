@@ -1,0 +1,50 @@
+.page-top {
+  padding-top: 50px;
+}
+
+.no-data-alert {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.spinner {
+  margin-top: 20px;
+  position: fixed;
+  right: 50%;
+}
+
+.title {
+  margin-bottom: 40px;
+}
+
+.card {
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.card-body {
+  padding-top: 0;
+  padding-bottom: 10px;
+}
+
+.btn-close {
+  padding: 5px;
+  outline: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: -5px;
+  text-align: right;
+  color: rgb(128,128,128);
+}
+
+.btn-close-div {
+  text-align: right;
+}
+
+.details {
+  line-height: 1;
+}
+
+.right-col{
+  text-align: right;
+}

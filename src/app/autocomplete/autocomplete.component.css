@@ -1,0 +1,32 @@
+#autocomplete-form {
+  text-align: center;
+  padding-top: 100px;
+}
+
+#title {
+  font-weight: 900;
+  font-size: 60px;
+  margin: auto;
+  padding-bottom: 35px;
+}
+
+#search-btn {
+  border: none;
+  color: rgb(119,71,255);
+}
+
+#query {
+  margin: 0;
+  border: none;
+}
+
+#search{
+  width: 15rem;
+  margin: auto;
+  border-radius:25px;
+  border:2px solid rgb(119,71,255);
+}
+
+input:focus {
+  box-shadow: none !important;
+}

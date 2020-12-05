@@ -1,0 +1,23 @@
+<form id="autocomplete-form">
+  <p class="h1" id="title">STOCK SEARCH</p>
+  <br>
+  <div class="input-group col-md-4" id="search">
+      <input class="form-control" id="query" type="text" placeholder="Enter stock name" matInput [formControl]="formControl"
+             [matAutocomplete]="auto">
+      <span class="input-group-append">
+        <button class="btn" id="search-btn" type="submit" (click)="navigateToDetails()">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngIf="isLoading">
+          <mat-spinner diameter="35"></mat-spinner>
+        </mat-option>
+        <ng-container *ngIf="!isLoading">
+          <mat-option *ngFor="let data of fetchedData" [value]="data.ticker">
+            <span> {{ data.ticker | uppercase }}</span> | <span> {{ data.name }}</span>
+          </mat-option>
+        </ng-container>
+      </mat-autocomplete>
+  </div>
+</form>

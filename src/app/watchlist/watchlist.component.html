@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="page-top">
+
+    <p class="h1 title">My Watchlist</p>
+
+    <div class="spinner" *ngIf="!(service.loader | async) else loaded">
+      <mat-spinner diameter="35"></mat-spinner>
+    </div>
+
+    <ng-template #loaded>
+
+      <div *ngIf="data else noData">
+        <div *ngFor="let d of data">
+          <div class="card" (click)="navigate(d.ticker)">
+            <div class="btn-close-div">
+              <span class="btn-close" aria-hidden="true" (click)="remove(d.ticker)">&times;</span>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between w-100">
+                <p class="h1">{{ d.ticker | uppercase }}</p>
+                <p class="h1 right-col" [ngStyle]="{'color': +d.change > 0 ? 'green' : +d.change < 0 ? 'red' : 'black'}">{{ d.lastPrice | number: '1.2-2' }}</p>
+              </div>
+              <div class="d-flex justify-content-between w-100 details">
+                <p class="h4">{{ d.companyName | titlecase }}</p>
+                <p class="h4 right-col" [ngStyle]="{'color': +d.change > 0 ? 'green' : +d.change < 0 ? 'red' : 'black'}">
+                  <img *ngIf="+d.change" src="{{ +d.change > 0 ? './assets/images/caret-up.svg' : './assets/images/caret-down.svg' }}" alt="caret">
+                  {{ d.change | number: '1.2-2' }} ({{ d.changePercent }})
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noData>
+        <div class="no-data-alert alert alert-warning" role="alert">Currently you don't have any stock in your watchlist.</div>
+      </ng-template>
+
+    </ng-template>
+
+  </div>
+
+</div>

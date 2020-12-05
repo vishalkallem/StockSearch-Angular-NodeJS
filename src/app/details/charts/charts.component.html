@@ -1,0 +1,8 @@
+<div class="container">
+  <highcharts-chart class="highcharts w-100"
+                    *ngIf="chartOptions"
+                    [Highcharts]="highCharts"
+                    [constructorType]="'stockChart'"
+                    [options]="chartOptions">
+  </highcharts-chart>
+</div>
