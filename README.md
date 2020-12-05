@@ -1,6 +1,6 @@
 # StockSearch
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.7.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.7 and you can find the project description [here](HW8_Description.pdf) and this is hosted using GCP [here](https://vk-stock-search.wl.r.appspot.com/)
 
 ## Development server
 
